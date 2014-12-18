@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - '0.10'
-  - '0.11'
+- '0.10'
+- '0.11'
 before_script:
-  
-  - npm install -g grunt-cli
-  
-
+- npm install -g grunt-cli
 matrix:
   allow_failures:
-    - node_js: '0.11'
+  - node_js: '0.11'
+notifications:
+  slack:
+    secure: lc8VLmVuHMlUCFQ+TADoXEPCf9byr+mu65aEeFyiP3DBfktHad/YmmU5sUiR1ut/PXqhkjFeZ0gFjNAo3q7R7RJW4cinTncgsG1ZSPY0PH6LyQ+Va2gIDRvyw854Yi58sbPzAxybtgSS9K3QntyRo0kGsGTO4eDAbqzwPLIxZ/Y=
