@@ -1,0 +1,64 @@
+{
+    "name": "mongodb-baserepository",
+    "version": "0.9.0",
+    "description": "A base repository for MongoDB",
+    "homepage": "https://github.com/litixsoft/mongodb-baserepository",
+    "author": {
+        "name": "Litixsoft GmbH",
+        "email": "development@litixsoft.de",
+        "url": "www.litixsoft.de"
+    },
+    "maintainers": [
+        "Marco Kannenberg",
+        "Timo Liebetrau",
+        "Andreas Krummsdorf"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/litixsoft/mongodb-baserepository"
+    },
+    "bugs": {
+        "url": "https://github.com/litixsoft/mongodb-baserepository/issues"
+    },
+    "license": "MIT",
+    "licenses": [
+        {
+           "type": "MIT",
+           "url": "https://github.com/litixsoft/mongodb-baserepository/blob/master/LICENSE"
+        }
+    ],
+    "keywords": [
+        "mongodb-baserepository",
+        "mongodb",
+        "repository"
+    ],
+    "main": "lib/mongodb-baserepository.js",
+    "directories": {
+       "lib": "./lib"
+    },
+    "engines": {
+        "node": ">=0.10.0"
+    },
+    "scripts": {
+        "test": "grunt test"
+    },
+    "dependencies": {
+        "async": "^0.9.0",
+        "lx-helpers": "^0.5.1",
+        "mongodb": "mongodb/node-mongodb-native#2.0"
+    },
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-bg-shell": "^2.3.1",
+        "grunt-bump": "^0.0.16",
+        "grunt-contrib-clean": "^0.6.0",
+        "grunt-conventional-changelog": "^1.1.0",
+        "grunt-eslint": "^2.1.0",
+        "grunt-jasmine-node": "^0.2.1",
+        "grunt-open": "^0.2.3",
+        "grunt-release": "^0.9.0",
+        "istanbul": "^0.3.5",
+        "load-grunt-tasks": "^1.0.0",
+        "time-grunt": "^1.0.0"
+    }
+}
