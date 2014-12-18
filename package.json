@@ -45,7 +45,7 @@
     "dependencies": {
         "async": "^0.9.0",
         "lx-helpers": "^0.5.1",
-        "mongodb": "mongodb/node-mongodb-native#2.0"
+        "mongodb": "^2.0.10"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
