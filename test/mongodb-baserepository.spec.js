@@ -63,7 +63,7 @@ describe('MongoDB BaseRepository', function () {
             age: 20
         };
 
-        db.collection('users').remove({}, function () {
+        db.collection('users').deleteMany({}, function () {
             done();
         });
     });
@@ -91,7 +91,7 @@ describe('MongoDB BaseRepository', function () {
         expect(func4).toThrow();
     });
 
-    it('should analyse the schema an set the indexes', function (done) {
+    it('should analyse the schema and set the indexes', function (done) {
         var repo = userRepo(db.collection('users'));
 
         setTimeout(function () {
@@ -238,6 +238,242 @@ describe('MongoDB BaseRepository', function () {
         expect(res3).toEqual(new Date('1973-06-01'));
         expect(res4).toBe('132');
         expect(res5).toBe(111);
+    });
+
+    it('should convert all mongo-ids', function (done) {
+        var schema = {
+            properties: {
+                _id: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                _id1: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                _id2: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                a: {
+                    type: 'object',
+                    properties: {
+                        aa: {
+                            type: 'string',
+                            format: 'mongo-id'
+                        }
+                    }
+                },
+                in: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                all: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                nin: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                elem: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            cc: {
+                                type: 'string',
+                                format: 'mongo-id'
+                            }
+                        }
+                    }
+                },
+                d: {
+                    type: 'object',
+                    properties: {
+                        dd: {
+                            type: 'object',
+                            properties: {
+                                ddd: {
+                                    type: 'object',
+                                    properties: {
+                                        dddd: {
+                                            type: 'string',
+                                            format: 'mongo-id'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        var collectionMock = db.collection('users');
+        collectionMock.count = function (query, options, cb) {
+            expect(query._id instanceof ObjectID).toBeTruthy();
+            expect(query['a.aa'] instanceof ObjectID).toBeTruthy();
+            expect(query['d.dd.ddd.dddd'] instanceof ObjectID).toBeTruthy();
+            expect(query.in.$in[0] instanceof ObjectID).toBeTruthy();
+            expect(query.all.$all[0] instanceof ObjectID).toBeTruthy();
+            expect(query.nin.$nin[0] instanceof ObjectID).toBeTruthy();
+            expect(query.nin.$nin[1] instanceof ObjectID).toBeTruthy();
+            expect(query.$or[0]._id instanceof ObjectID).toBeTruthy();
+            expect(query.$or[1]['a.aa'] instanceof ObjectID).toBeTruthy();
+            expect(query.$and[0]._id instanceof ObjectID).toBeTruthy();
+            expect(query.$and[0]._id instanceof ObjectID).toBeTruthy();
+            expect(query.$nor[0]._id instanceof ObjectID).toBeTruthy();
+            expect(query.$nor[1]['a.aa'] instanceof ObjectID).toBeTruthy();
+            expect(query['elem.cc'] instanceof ObjectID).toBeTruthy();
+            expect(query._id1.$not instanceof ObjectID).toBeTruthy();
+            expect(query._id2.$ne instanceof ObjectID).toBeTruthy();
+
+            cb();
+        };
+
+        var repo = sut(collectionMock, schema);
+        var query = {
+            _id: '507f191e810c19729de860ea',
+            'a.aa': '507f191e810c19729de860ea',
+            'd.dd.ddd.dddd': '507f191e810c19729de860ea',
+            in: {
+                $in: ['507f191e810c19729de860ea']
+            },
+            all: {
+                $all: ['507f191e810c19729de860ea']
+            },
+            nin: {
+                $nin: ['507f191e810c19729de860ea', '507f191e810c19729de860ea']
+            },
+            $or: [{_id: '507f191e810c19729de860ea'}, {'a.aa': '507f191e810c19729de860ea'}],
+            'elem.cc': '507f191e810c19729de860ea',
+            $and: [{_id: '507f191e810c19729de860ea'}, {'a.aa': '507f191e810c19729de860ea'}],
+            $nor: [{_id: '507f191e810c19729de860ea'}, {'a.aa': '507f191e810c19729de860ea'}],
+            _id1: {
+                $not: '507f191e810c19729de860ea'
+            },
+            _id2: {
+                $ne: '507f191e810c19729de860ea'
+            }
+        };
+
+        repo.count(query, function () {
+            done();
+        });
+    });
+
+    it('should convert all mongo-ids in a complex $or condition', function (done) {
+        var schema = {
+            properties: {
+                _id: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                _id1: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                _id2: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                a: {
+                    type: 'object',
+                    properties: {
+                        aa: {
+                            type: 'string',
+                            format: 'mongo-id'
+                        }
+                    }
+                },
+                in: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                all: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                nin: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'mongo-id'
+                    }
+                },
+                elem: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            cc: {
+                                type: 'string',
+                                format: 'mongo-id'
+                            }
+                        }
+                    }
+                },
+                d: {
+                    type: 'object',
+                    properties: {
+                        dd: {
+                            type: 'object',
+                            properties: {
+                                ddd: {
+                                    type: 'object',
+                                    properties: {
+                                        dddd: {
+                                            type: 'string',
+                                            format: 'mongo-id'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        var collectionMock = db.collection('users');
+        collectionMock.count = function (query, options, cb) {
+            expect(query.$or[0]._id.$not instanceof ObjectID).toBeTruthy();
+            expect(query.$or[1]['d.dd.ddd.dddd'] instanceof ObjectID).toBeTruthy();
+
+            cb();
+        };
+
+        var repo = sut(collectionMock, schema);
+        var query = {
+            $or: [
+                {
+                    _id: {
+                        $not: '507f191e810c19729de860ea'
+                    }
+                },
+                {
+                    'd.dd.ddd.dddd': '507f191e810c19729de860ea'
+                }
+            ]
+        };
+
+        repo.count(query, function () {
+            done();
+        });
     });
 
     describe('.count()', function () {
