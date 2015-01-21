@@ -1,3 +1,19 @@
+<a name="0.10.0"></a>
+## 0.10.0 (2015-01-21)
+
+
+#### Features
+
+* change option 'deleteUnknownProperties' to 'unknownProperties' ([6d2d34e2](https://github.com/litixsoft/mongodb-baserepository/commit/6d2d34e2ffda50a5d8203cbe548ebff126e91b4c))
+
+
+#### Breaking Changes
+
+* 
+from now on only lx-valid >= 0.4.0 is supported
+ ([6d2d34e2](https://github.com/litixsoft/mongodb-baserepository/commit/6d2d34e2ffda50a5d8203cbe548ebff126e91b4c))
+
+
 <a name="0.9.1"></a>
 ### 0.9.1 (2014-12-19)
 

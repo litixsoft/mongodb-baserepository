@@ -1,6 +1,6 @@
 {
     "name": "mongodb-baserepository",
-    "version": "0.9.1",
+    "version": "0.10.0",
     "description": "A base repository for MongoDB",
     "homepage": "https://github.com/litixsoft/mongodb-baserepository",
     "author": {
