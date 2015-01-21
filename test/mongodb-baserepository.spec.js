@@ -216,7 +216,7 @@ describe('MongoDB BaseRepository', function () {
         var repo = sut(db.collection('users'));
         var res = repo.getValidationOptions();
 
-        expect(res.deleteUnknownProperties).toBeTruthy();
+        expect(res.unknownProperties).toBeTruthy();
         expect(res.trim).toBeTruthy();
         expect(res.strictRequired).toBeTruthy();
         expect(typeof res.convert).toBe('function');
