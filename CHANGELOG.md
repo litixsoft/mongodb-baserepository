@@ -1,3 +1,12 @@
+<a name"1.0.0"></a>
+## 1.0.0 (2015-04-02)
+
+
+#### Features
+
+* drop the deprecated functions insert(), update() and remove() ([4d4c2c0c](https://github.com/litixsoft/mongodb-baserepository/commit/4d4c2c0c))
+
+
 <a name"0.10.1"></a>
 ### 0.10.1 (2015-04-02)
 
