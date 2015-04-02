@@ -1619,7 +1619,7 @@ describe('MongoDB BaseRepository', function () {
 
             repo.insert(user, function () {
                 repo.insert({userName: 'wayne'}, function () {
-                    repo.updateMany({userName: 'chuck1'}, {userName: 'bob'}, function (err, res) {
+                    repo.updateMany({userName: 'chuck1'}, {$set: {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
                         expect(res.result.n).toBe(0);
@@ -2180,15 +2180,15 @@ describe('MongoDB BaseRepository', function () {
             });
         });
 
-        it('should delete all documents when the filter is no object', function (done) {
+        it('should return a MongoError when the filter is no object', function (done) {
             var repo = sut(db.collection('users'));
 
             repo.insert(user, function () {
                 repo.insert({userName: 'wayne'}, function () {
                     repo.deleteMany(55, function (err, res) {
-                        expect(err).toBeNull();
-                        expect(res.result.ok).toBe(1);
-                        expect(res.result.n).toBe(2);
+                        expect(res).toBeUndefined();
+                        expect(err instanceof MongoError).toBeTruthy();
+                        expect(err.message).toBe('wrong type for \'q\' field, expected object, found q: 55');
 
                         done();
                     });
@@ -2201,7 +2201,7 @@ describe('MongoDB BaseRepository', function () {
 
             repo.insert(user, function () {
                 repo.insert({userName: 'wayne'}, function () {
-                    repo.deleteMany(55, 66, function (err, res) {
+                    repo.deleteMany({}, 66, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
                         expect(res.result.n).toBe(2);
@@ -2330,15 +2330,15 @@ describe('MongoDB BaseRepository', function () {
             });
         });
 
-        it('should delete one document when the filter is no object', function (done) {
+        it('should return a MongoError when the filter is no object', function (done) {
             var repo = sut(db.collection('users'));
 
             repo.insert(user, function () {
                 repo.insert({userName: 'wayne'}, function () {
                     repo.deleteOne(55, function (err, res) {
-                        expect(err).toBeNull();
-                        expect(res.result.ok).toBe(1);
-                        expect(res.result.n).toBe(1);
+                        expect(res).toBeUndefined();
+                        expect(err instanceof MongoError).toBeTruthy();
+                        expect(err.message).toBe('wrong type for \'q\' field, expected object, found q: 55');
 
                         done();
                     });
@@ -2351,7 +2351,7 @@ describe('MongoDB BaseRepository', function () {
 
             repo.insert(user, function () {
                 repo.insert({userName: 'wayne'}, function () {
-                    repo.deleteOne(55, 66, function (err, res) {
+                    repo.deleteOne({}, 66, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
                         expect(res.result.n).toBe(1);
