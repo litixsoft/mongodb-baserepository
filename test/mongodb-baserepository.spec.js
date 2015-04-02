@@ -499,10 +499,10 @@ describe('MongoDB BaseRepository', function () {
             repo.count(function (error, result) {
                 expect(result).toBe(0);
 
-                repo.insert(user, function (err) {
+                repo.insertOne(user, function (err) {
                     expect(err).toBeNull();
 
-                    repo.insert({userName: 'wayne'}, function (err) {
+                    repo.insertOne({userName: 'wayne'}, function (err) {
                         expect(err).toBeNull();
 
                         repo.count(function (error, result) {
@@ -534,116 +534,6 @@ describe('MongoDB BaseRepository', function () {
 
                 done();
             });
-        });
-    });
-
-    describe('.insert()', function () {
-        it('should insert a new document in the collection', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function (error, result) {
-                expect(result).toBeDefined();
-                expect(Array.isArray(result.ops)).toBeTruthy();
-                expect(result.ops[0].firstName).toBe('Chuck');
-                expect(result.ops[0].lastName).toBe('Norris');
-                expect(result.ops[0].userName).toBe('chuck');
-                expect(result.ops[0].email).toBe('chuck@norris.com');
-                expect(result.ops[0].birthdate instanceof Date).toBeTruthy();
-                expect(result.result.n).toBe(1);
-                expect(result.result.ok).toBe(1);
-
-                done();
-            });
-        });
-
-        it('should insert a new document in the collection without callback', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user);
-
-            setTimeout(function () {
-                repo.find({userName: 'chuck'}, function (err, result) {
-                    expect(err).toBeNull();
-                    expect(result).toBeDefined();
-                    expect(Array.isArray(result)).toBeTruthy();
-                    expect(result[0].firstName).toBe('Chuck');
-                    expect(result[0].lastName).toBe('Norris');
-                    expect(result[0].userName).toBe('chuck');
-                    expect(result[0].email).toBe('chuck@norris.com');
-                    expect(result[0].birthdate instanceof Date).toBeTruthy();
-
-                    done();
-                });
-            }, 300);
-        });
-
-        it('should insert a new document in the collection with options and without callback', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, {w: 0});
-
-            setTimeout(function () {
-                repo.find({userName: 'chuck'}, function (err, result) {
-                    expect(result).toBeDefined();
-                    expect(Array.isArray(result)).toBeTruthy();
-                    expect(result[0].firstName).toBe('Chuck');
-                    expect(result[0].lastName).toBe('Norris');
-                    expect(result[0].userName).toBe('chuck');
-                    expect(result[0].email).toBe('chuck@norris.com');
-                    expect(result[0].birthdate instanceof Date).toBeTruthy();
-                    done();
-                });
-            }, 100);
-        });
-
-        it('should insert an array with new documents in the collection', function (done) {
-            var repo = sut(db.collection('users'));
-            var doc = [user, {userName: 'test'}, {lastName: 'wayne'}];
-
-            repo.insert(doc, function (error, result) {
-                expect(error).toBeNull();
-                expect(result).toBeDefined();
-                expect(Array.isArray(result.ops)).toBeTruthy();
-                expect(result.ops.length).toBe(3);
-                expect(result.ops[0].firstName).toBe('Chuck');
-                expect(result.ops[0].lastName).toBe('Norris');
-                expect(result.ops[0].userName).toBe('chuck');
-                expect(result.ops[0].email).toBe('chuck@norris.com');
-                expect(result.ops[0].birthdate instanceof Date).toBeTruthy();
-                expect(result.result.n).toBe(3);
-                expect(result.result.ok).toBe(1);
-
-                done();
-            });
-        });
-
-        it('should return an error callback when the param "doc" is not of type object or array', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(123, function (error, result) {
-                expect(result).toBeUndefined();
-                expect(error).toBeDefined();
-                expect(error instanceof TypeError).toBeTruthy();
-                expect(error.message).toBe('Param "doc" is of type number! Type object or array expected');
-
-                done();
-            });
-        });
-
-        it('should throw an exception if the params are wrong', function () {
-            var repo = sut(db.collection('users'));
-
-            expect(function () {
-                return repo.insert(null);
-            }).toThrow();
-
-            expect(function () {
-                return repo.insert({}, {}, 2);
-            }).toThrow();
-
-            expect(function () {
-                return repo.insert({}, 1);
-            }).toThrow();
         });
     });
 
@@ -764,8 +654,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find(function (err, res) {
                         expect(err).toBeNull();
                         expect(Array.isArray(res)).toBeTruthy();
@@ -782,8 +672,8 @@ describe('MongoDB BaseRepository', function () {
         it('should callback with an error if the param "query" is not an object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find(123, function (err, res) {
                         expect(err).toBeDefined();
                         expect(err instanceof TypeError).toBeTruthy();
@@ -798,8 +688,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection and check the query', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({limit: 1}, function (err, res) {
                         expect(err).toBeNull();
                         expect(Array.isArray(res)).toBeTruthy();
@@ -815,11 +705,11 @@ describe('MongoDB BaseRepository', function () {
             var ids = [];
             var repo = userRepo(db.collection('users'));
 
-            repo.insert(user, function (err, res) {
+            repo.insertOne(user, function (err, res) {
                 ids.push(res.ops[0]._id.toString());
-                repo.insert({userName: 'wayne'}, function (err, res) {
+                repo.insertOne({userName: 'wayne'}, function (err, res) {
                     ids.push(res.ops[0]._id.toString());
-                    repo.insert({userName: 'who'}, function () {
+                    repo.insertOne({userName: 'who'}, function () {
                         repo.find({_id: {$in: ids}}, function (err, res) {
                             expect(err).toBeNull();
                             expect(Array.isArray(res)).toBeTruthy();
@@ -838,11 +728,11 @@ describe('MongoDB BaseRepository', function () {
             var ids = [];
             var repo = userRepo(db.collection('users'));
 
-            repo.insert(user, function (err, res) {
+            repo.insertOne(user, function (err, res) {
                 ids.push(res.ops[0]._id);
-                repo.insert({userName: 'wayne'}, function (err, res) {
+                repo.insertOne({userName: 'wayne'}, function (err, res) {
                     ids.push(res.ops[0]._id);
-                    repo.insert({userName: 'who'}, function () {
+                    repo.insertOne({userName: 'who'}, function () {
                         repo.find({_id: {$in: ids}}, function (err, res) {
                             expect(err).toBeNull();
                             expect(Array.isArray(res)).toBeTruthy();
@@ -860,8 +750,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with filter', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({userName: 'wayne'}, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(1);
@@ -875,8 +765,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with limit', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, {limit: 1}, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(1);
@@ -890,8 +780,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with skip', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, {skip: 1}, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(1);
@@ -909,8 +799,8 @@ describe('MongoDB BaseRepository', function () {
                 fields: ['userName', 'lastName']
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, options, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -942,8 +832,8 @@ describe('MongoDB BaseRepository', function () {
                 }
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, options, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -972,8 +862,8 @@ describe('MongoDB BaseRepository', function () {
                 sort: {'userName': 1}
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, options, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -995,8 +885,8 @@ describe('MongoDB BaseRepository', function () {
                 }
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, options, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -1016,8 +906,8 @@ describe('MongoDB BaseRepository', function () {
                 sort: 'userName'
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.find({}, options, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -1037,9 +927,9 @@ describe('MongoDB BaseRepository', function () {
                 sort: ['userName', 'age']
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 15}, function () {
-                    repo.insert({userName: 'wayne2', age: 10}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 15}, function () {
+                    repo.insertOne({userName: 'wayne2', age: 10}, function () {
                         repo.find({}, options, function (err, res) {
                             expect(Array.isArray(res)).toBeTruthy();
                             expect(res.length).toBe(3);
@@ -1066,9 +956,9 @@ describe('MongoDB BaseRepository', function () {
                 ]
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 10}, function () {
-                    repo.insert({userName: 'wayne2', age: 15}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 10}, function () {
+                    repo.insertOne({userName: 'wayne2', age: 15}, function () {
                         repo.find({}, options, function (err, res) {
                             expect(Array.isArray(res)).toBeTruthy();
                             expect(res.length).toBe(3);
@@ -1095,9 +985,9 @@ describe('MongoDB BaseRepository', function () {
                 }
             };
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 10}, function () {
-                    repo.insert({userName: 'wayne2', age: 15}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 10}, function () {
+                    repo.insertOne({userName: 'wayne2', age: 15}, function () {
                         repo.find({}, options, function (err, res) {
                             expect(Array.isArray(res)).toBeTruthy();
                             expect(res.length).toBe(3);
@@ -1118,8 +1008,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with the default sorting', function (done) {
             var repo = userRepo(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'aaa'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'aaa'}, function () {
                     repo.find(function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -1136,8 +1026,8 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with the default sorting when param sort is empty', function (done) {
             var repo = userRepo(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'aaa'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'aaa'}, function () {
                     repo.find({}, {sort: null}, function (err, res) {
                         expect(Array.isArray(res)).toBeTruthy();
                         expect(res.length).toBe(2);
@@ -1154,10 +1044,10 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection and convert the id in the query to mongo id', function (done) {
             var repo = userRepo(db.collection('users'));
 
-            repo.insert(user, function (err, res) {
+            repo.insertOne(user, function (err, res) {
                 var id = res.ops[0]._id;
 
-                repo.insert({userName: 'aaa', chief_id: id, i: {ii: {manager_id: id}}}, function (err, res) {
+                repo.insertOne({userName: 'aaa', chief_id: id, i: {ii: {manager_id: id}}}, function (err, res) {
                     expect(err).toBeNull();
                     expect(res).toBeDefined();
 
@@ -1205,8 +1095,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return one document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne({userName: 'chuck'}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.userName).toBe('chuck');
@@ -1221,8 +1111,8 @@ describe('MongoDB BaseRepository', function () {
         it('should callback with an error if the param "query" is not an object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne(123, function (err, res) {
                         expect(err).toBeDefined();
                         expect(err instanceof TypeError).toBeTruthy();
@@ -1237,8 +1127,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return one document of the collection and check the query', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne({fields: ['_id']}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res._id).toBeDefined();
@@ -1263,8 +1153,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return no document when the query not matches any document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne({userName: 'who?'}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res).toBeNull();
@@ -1280,8 +1170,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return one document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne({userName: 'chuck'}, function (err, res) {
                         expect(res).toBeDefined();
 
@@ -1299,8 +1189,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return one document of the collection and convert the id to a mongo id', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.findOne({userName: 'chuck'}, function (err, res) {
                         expect(res).toBeDefined();
 
@@ -1388,214 +1278,12 @@ describe('MongoDB BaseRepository', function () {
         });
     });
 
-    describe('has a function update() which', function () {
-        it('should update the document of the collection', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.update({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
-                        expect(res).toBeDefined();
-                        expect(res.result.ok).toBe(1);
-                        expect(res.result.n).toBe(1);
-
-                        repo.findOne({userName: 'bob'}, function (err, res1) {
-                            expect(res1).toBeDefined();
-                            expect(res1.userName).toBe('bob');
-                            expect(res1.lastName).toBe('Norris');
-                            expect(res1.email).toBe('chuck@norris.com');
-
-                            done();
-                        });
-                    });
-                });
-            });
-        });
-
-        it('should update no document when the query matches no document of the collection', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.update({userName: 'chuck1'}, {userName: 'bob'}, function (err, res) {
-                        expect(res).toBeDefined();
-                        expect(res.result.ok).toBe(1);
-                        expect(res.result.n).toBe(0);
-
-                        done();
-                    });
-                });
-            });
-        });
-
-        it('should throw an exception when the number of params is less than 3', function () {
-            var repo = sut(db.collection('users'));
-
-            expect(function () {
-                return repo.update(1, 2);
-            }).toThrow();
-
-            expect(function () {
-                return repo.update(1);
-            }).toThrow();
-
-            expect(function () {
-                return repo.update();
-            }).toThrow();
-        });
-
-        it('should update the document of the collection', function (done) {
-            var repo = userRepo(db.collection('users'));
-            var user1 = {
-                firstName: 'Chuck',
-                lastName: 'Norris',
-                userName: 'chuck',
-                email: 'chuck@norris.com',
-                birthdate: '1973-06-01T15:49:00.000Z',
-                age: 44
-            };
-
-            repo.insert(user1, function () {
-                repo.update({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
-                    expect(res).toBeDefined();
-                    expect(res.result.ok).toBe(1);
-                    expect(res.result.n).toBe(1);
-
-                    repo.findOne({userName: 'bob'}, function (err, res1) {
-                        expect(res1).toBeDefined();
-                        expect(res1.userName).toBe('bob');
-                        expect(res1.lastName).toBe('Norris');
-                        expect(res1.email).toBe('chuck@norris.com');
-
-                        done();
-                    });
-                });
-
-            });
-        });
-
-        it('should update the document of the collection and has no options as parameter', function (done) {
-            var repo = userRepo(db.collection('users'));
-            var user1 = {
-                firstName: 'Chuck',
-                lastName: 'Norris',
-                userName: 'chuck',
-                email: 'chuck@norris.com',
-                birthdate: '1973-06-01T15:49:00.000Z',
-                age: 44
-            };
-
-            repo.insert(user1, function () {
-                repo.update({userName: 'chuck'}, {'$set': {userName: 'bob'}}, null, function (err, res) {
-                    expect(res).toBeDefined();
-                    expect(res.result.ok).toBe(1);
-                    expect(res.result.n).toBe(1);
-
-                    repo.findOne({userName: 'bob'}, function (err, res1) {
-                        expect(res1).toBeDefined();
-                        expect(res1.userName).toBe('bob');
-                        expect(res1.lastName).toBe('Norris');
-                        expect(res1.email).toBe('chuck@norris.com');
-
-                        done();
-                    });
-                });
-
-            });
-        });
-
-        it('should update all documents of the collection', function (done) {
-            var repo = userRepo(db.collection('users'));
-            var user1 = {
-                firstName: 'Chuck',
-                lastName: 'Norris',
-                userName: 'chuck'
-            };
-
-            var user2 = {
-                firstName: 'Chuck',
-                lastName: 'Norris',
-                userName: 'chuck2'
-            };
-
-            repo.insert(user1, function () {
-                repo.insert(user2, function () {
-                    repo.count({userName: 'chuck'}, function (err, res) {
-                        expect(res).toBe(1);
-
-                        repo.update({firstName: 'Chuck'}, {'$set': {lastName: 'bob'}}, {multi: true}, function (err, res) {
-                            expect(res).toBeDefined();
-                            expect(res.result.ok).toBe(1);
-                            expect(res.result.n).toBe(2);
-
-                            repo.count({lastName: 'Norris'}, function (err, res) {
-                                expect(res).toBe(0);
-                                repo.count({lastName: 'bob'}, function (err, res) {
-                                    expect(res).toBe(2);
-
-                                    done();
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-
-        it('should delete the key of the document on update', function (done) {
-            var repo = userRepo(db.collection('users'));
-            var user1 = {
-                firstName: 'Chuck',
-                lastName: 'Norris',
-                userName: 'chuck',
-                email: 'chuck@norris.com',
-                birthdate: '1973-06-01T15:49:00.000Z',
-                age: 44
-            };
-
-            repo.insert(user1, function (err, res) {
-                res.ops[0].userName = 'bob';
-
-                repo.update({userName: 'chuck'}, {'$set': res.ops[0]}, function (err, res) {
-                    expect(res).toBeDefined();
-                    expect(res.result.ok).toBe(1);
-                    expect(res.result.n).toBe(1);
-
-                    repo.findOne({userName: 'bob'}, function (err, res1) {
-                        expect(res1).toBeDefined();
-                        expect(res1.userName).toBe('bob');
-                        expect(res1.lastName).toBe('Norris');
-                        expect(res1.email).toBe('chuck@norris.com');
-
-                        res1.lastName = 'Wayne';
-
-                        repo.update({userName: 'bob'}, res1, function (err, res2) {
-                            expect(res2).toBeDefined();
-                            expect(res2.result.ok).toBe(1);
-                            expect(res2.result.n).toBe(1);
-
-                            repo.findOne({lastName: 'Wayne'}, function (err, res3) {
-                                expect(res3).toBeDefined();
-                                expect(res3.userName).toBe('bob');
-                                expect(res3.lastName).toBe('Wayne');
-                                expect(res3.email).toBe('chuck@norris.com');
-
-                                done();
-                            });
-                        });
-                    });
-                });
-
-            });
-        });
-    });
-
     describe('has a function updateMany() which', function () {
         it('should update the document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
@@ -1617,8 +1305,8 @@ describe('MongoDB BaseRepository', function () {
         it('should update no document when the query matches no document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.updateMany({userName: 'chuck1'}, {$set: {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
@@ -1657,7 +1345,7 @@ describe('MongoDB BaseRepository', function () {
                 age: 44
             };
 
-            repo.insert(user1, function () {
+            repo.insertOne(user1, function () {
                 repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
@@ -1687,7 +1375,7 @@ describe('MongoDB BaseRepository', function () {
                 age: 44
             };
 
-            repo.insert(user1, function () {
+            repo.insertOne(user1, function () {
                 repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, null, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
@@ -1720,8 +1408,8 @@ describe('MongoDB BaseRepository', function () {
                 userName: 'chuck2'
             };
 
-            repo.insert(user1, function () {
-                repo.insert(user2, function () {
+            repo.insertOne(user1, function () {
+                repo.insertOne(user2, function () {
                     repo.count({userName: 'chuck'}, function (err, res) {
                         expect(res).toBe(1);
 
@@ -1752,7 +1440,7 @@ describe('MongoDB BaseRepository', function () {
                 userName: 'chuck'
             };
 
-            repo.insert(user1, function () {
+            repo.insertOne(user1, function () {
                 repo.updateMany({userName: 'chuck'}, {lastName: '133'}, function (err, res) {
                     expect(res).toBeUndefined();
                     expect(err.name).toBe('MongoError');
@@ -1768,8 +1456,8 @@ describe('MongoDB BaseRepository', function () {
         it('should update the document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
@@ -1791,8 +1479,8 @@ describe('MongoDB BaseRepository', function () {
         it('should update no document when the query matches no document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.updateOne({userName: 'chuck1'}, {userName: 'bob'}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
@@ -1831,7 +1519,7 @@ describe('MongoDB BaseRepository', function () {
                 age: 44
             };
 
-            repo.insert(user1, function () {
+            repo.insertOne(user1, function () {
                 repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
@@ -1861,7 +1549,7 @@ describe('MongoDB BaseRepository', function () {
                 age: 44
             };
 
-            repo.insert(user1, function () {
+            repo.insertOne(user1, function () {
                 repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, null, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
@@ -1894,8 +1582,8 @@ describe('MongoDB BaseRepository', function () {
                 userName: 'chuck2'
             };
 
-            repo.insert(user1, function () {
-                repo.insert(user2, function () {
+            repo.insertOne(user1, function () {
+                repo.insertOne(user2, function () {
                     repo.count({firstName: 'Chuck'}, function (err, res) {
                         expect(res).toBe(2);
 
@@ -1919,177 +1607,13 @@ describe('MongoDB BaseRepository', function () {
         });
     });
 
-    describe('has a function remove() which', function () {
-        it('should remove the document of the collection with a query', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.insert({userName: 'troll'}, function () {
-                        repo.remove({userName: 'chuck'}, function (err, res) {
-                            expect(err).toBeNull();
-                            expect(res.result.ok).toBe(1);
-                            expect(res.result.n).toBe(1);
-
-                            repo.count(function (err, res1) {
-                                expect(res1).toBe(2);
-
-                                repo.remove({userName: 'wayne'}, {w: 1}, function (err, res2) {
-                                    expect(res2).toBeDefined();
-                                    expect(res2.result.ok).toBe(1);
-                                    expect(res2.result.n).toBe(1);
-
-                                    repo.count(function (err, res3) {
-                                        expect(res3).toBe(1);
-
-                                        repo.remove({userName: 'troll'});
-
-                                        setTimeout(function () {
-                                            repo.count(function (err, res) {
-                                                expect(res).toBe(0);
-
-                                                done();
-                                            });
-                                        }, 100);
-                                    });
-                                });
-                            });
-                        });
-                    });
-                });
-            });
-        });
-
-        it('should remove all documents of the collection', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove();
-
-                    setTimeout(function () {
-                        repo.count(function (err, res) {
-                            expect(res).toBe(0);
-
-                            done();
-                        });
-                    }, 100);
-                });
-            });
-        });
-
-        it('should remove all documents of the collection with options', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove({w: 1});
-
-                    setTimeout(function () {
-                        repo.count(function (err, res) {
-                            expect(res).toBe(0);
-
-                            done();
-                        });
-                    }, 100);
-                });
-            });
-        });
-
-        it('should remove all documents of the collection with callback', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove(function () {
-                        repo.count(function (err, res) {
-                            expect(res).toBe(0);
-
-                            done();
-                        });
-                    });
-                });
-            });
-        });
-
-        it('should remove all documents of the collection with callback', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove({w: 1}, function () {
-                        repo.count(function (err, res) {
-                            expect(res).toBe(0);
-
-                            done();
-                        });
-                    });
-                });
-            });
-        });
-
-        it('should return an error callback when the param "query" is not of type object', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove(null, function (err, res) {
-                        expect(err).toBeDefined();
-                        expect(err instanceof TypeError).toBeTruthy();
-                        expect(err.message).toBe('Param "query" is of type null! Type object expected');
-                        expect(res).toBeUndefined();
-
-                        done();
-                    });
-                });
-            });
-        });
-
-        it('should return an error callback when the param "options" is not of type object', function (done) {
-            var repo = sut(db.collection('users'));
-
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.remove({}, 33, function (err, res) {
-                        expect(err).toBeDefined();
-                        expect(err instanceof TypeError).toBeTruthy();
-                        expect(err.message).toBe('Param "options" is of type number! Type object expected');
-                        expect(res).toBeUndefined();
-
-                        done();
-                    });
-                });
-            });
-        });
-
-        it('should throw an exception when params are of wrong type', function () {
-            var repo = sut(db.collection('users'));
-
-            expect(function () {
-                return repo.remove(1, 2);
-            }).toThrow();
-            expect(function () {
-                return repo.remove(1, 2, 3);
-            }).toThrow();
-            expect(function () {
-                return repo.remove({}, 1);
-            }).toThrow();
-            expect(function () {
-                return repo.remove({}, 1, 2);
-            }).toThrow();
-            expect(function () {
-                return repo.remove({}, {}, 2);
-            }).toThrow();
-        });
-    });
-
     describe('has a function deleteMany() which', function () {
         it('should remove the document of the collection with a query', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.insert({userName: 'troll'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
+                    repo.insertOne({userName: 'troll'}, function () {
                         repo.deleteMany({userName: 'chuck'}, function (err, res) {
                             expect(err).toBeNull();
                             expect(res.result.ok).toBe(1);
@@ -2119,8 +1643,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove all documents of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany(function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2135,8 +1659,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove no documents when the filter does not match', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany({w: 1}, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2151,8 +1675,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove all documents of the collection with callback', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany(function () {
                         repo.count(function (err, res) {
                             expect(res).toBe(0);
@@ -2167,8 +1691,8 @@ describe('MongoDB BaseRepository', function () {
         it('should delete all documents when the filter is null', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany(null, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2183,8 +1707,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return a MongoError when the filter is no object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany(55, function (err, res) {
                         expect(res).toBeUndefined();
                         expect(err instanceof MongoError).toBeTruthy();
@@ -2199,8 +1723,8 @@ describe('MongoDB BaseRepository', function () {
         it('should delete all documents when the options are no object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteMany({}, 66, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2237,9 +1761,9 @@ describe('MongoDB BaseRepository', function () {
         it('should remove the document of the collection with a query', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
-                    repo.insert({userName: 'troll'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
+                    repo.insertOne({userName: 'troll'}, function () {
                         repo.deleteOne({userName: 'chuck'}, function (err, res) {
                             expect(err).toBeNull();
                             expect(res.result.ok).toBe(1);
@@ -2269,8 +1793,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove one document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne(function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2285,8 +1809,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove no documents when the filter does not match', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne({w: 1}, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2301,8 +1825,8 @@ describe('MongoDB BaseRepository', function () {
         it('should remove one document of the collection with callback', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne(function () {
                         repo.count(function (err, res) {
                             expect(res).toBe(1);
@@ -2317,8 +1841,8 @@ describe('MongoDB BaseRepository', function () {
         it('should delete one document when the filter is null', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne(null, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2333,8 +1857,8 @@ describe('MongoDB BaseRepository', function () {
         it('should return a MongoError when the filter is no object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne(55, function (err, res) {
                         expect(res).toBeUndefined();
                         expect(err instanceof MongoError).toBeTruthy();
@@ -2349,8 +1873,8 @@ describe('MongoDB BaseRepository', function () {
         it('should delete one document when the options are no object', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne'}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne'}, function () {
                     repo.deleteOne({}, 66, function (err, res) {
                         expect(err).toBeNull();
                         expect(res.result.ok).toBe(1);
@@ -2408,9 +1932,9 @@ describe('MongoDB BaseRepository', function () {
         it('should execute the aggregation pipeline', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 20}, function () {
-                    repo.insert({userName: 'hans', age: 30}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 20}, function () {
+                    repo.insertOne({userName: 'hans', age: 30}, function () {
                         repo.aggregate(pipeline, {}, function (err, res) {
                             expect(err).toBeNull();
                             expect(res).toBeDefined();
@@ -2431,9 +1955,9 @@ describe('MongoDB BaseRepository', function () {
         it('should execute the aggregation pipeline and set options to empty object when number of params is 2', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 20}, function () {
-                    repo.insert({userName: 'hans', age: 30}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 20}, function () {
+                    repo.insertOne({userName: 'hans', age: 30}, function () {
                         repo.aggregate(pipeline, function (err, res) {
                             expect(err).toBeNull();
                             expect(res).toBeDefined();
@@ -2454,9 +1978,9 @@ describe('MongoDB BaseRepository', function () {
         it('should execute the aggregation pipeline and set options to empty object when options are empty', function (done) {
             var repo = sut(db.collection('users'));
 
-            repo.insert(user, function () {
-                repo.insert({userName: 'wayne', age: 20}, function () {
-                    repo.insert({userName: 'hans', age: 30}, function () {
+            repo.insertOne(user, function () {
+                repo.insertOne({userName: 'wayne', age: 20}, function () {
+                    repo.insertOne({userName: 'hans', age: 30}, function () {
                         repo.aggregate(pipeline, null, function (err, res) {
                             expect(err).toBeNull();
                             expect(res).toBeDefined();
