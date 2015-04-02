@@ -1,3 +1,13 @@
+<a name"0.10.1"></a>
+### 0.10.1 (2015-04-02)
+
+
+#### Features
+
+* export the object which is used as an id in the repository ([cb4ff4cc](https://github.com/litixsoft/mongodb-baserepository/commit/cb4ff4cc))
+* update mongodb driver ([b4a2888a](https://github.com/litixsoft/mongodb-baserepository/commit/b4a2888a))
+
+
 <a name="0.10.0"></a>
 ## 0.10.0 (2015-01-21)
 
