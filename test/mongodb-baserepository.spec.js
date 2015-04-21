@@ -476,6 +476,42 @@ describe('MongoDB BaseRepository', function () {
         });
     });
 
+    it('should convert all mongo-ids in a complex $and condition', function (done) {
+        var schema = {
+            properties: {
+                _id: {
+                    type: 'string',
+                    format: 'mongo-id'
+                },
+                partner_id: {
+                    type: 'string',
+                    format: 'mongo-id'
+                }
+            }
+        };
+        var collectionMock = db.collection('users');
+        collectionMock.count = function (query, options, cb) {
+            expect(query.$and[0].partner_id instanceof ObjectID).toBeTruthy();
+            expect(query.$and[1]).toEqual({});
+
+            cb();
+        };
+
+        var repo = sut(collectionMock, schema);
+        var query = {
+            $and: [
+                {
+                    partner_id: '507f191e810c19729de860ea'
+                },
+                {}
+            ]
+        };
+
+        repo.count(query, function () {
+            done();
+        });
+    });
+
     describe('.count()', function () {
         it('should throw an exception if the params are wrong', function () {
             var repo = sut(db.collection('users'));
