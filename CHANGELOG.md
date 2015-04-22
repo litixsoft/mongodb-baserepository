@@ -1,3 +1,12 @@
+<a name"1.0.2"></a>
+### 1.0.2 (2015-04-22)
+
+
+#### Features
+
+* add method ensureObjectID(id) ([f8811b11](https://github.com/litixsoft/mongodb-baserepository/commit/f8811b11))
+
+
 <a name"1.0.1"></a>
 ### 1.0.1 (2015-04-14)
 
