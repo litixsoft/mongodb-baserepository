@@ -196,6 +196,18 @@ describe('MongoDB BaseRepository', function () {
         expect(repo.convertId(_id)).toBe(id);
     });
 
+    it('.ensureObjectID() should always return a MongoDB ObjectID', function () {
+        var repo = sut(db.collection('users'));
+        var id = '5108e9333cb086801f000035';
+        var _id = new ObjectID(id);
+
+        expect(typeof repo.ensureObjectID(id)).toBe('object');
+        expect(repo.ensureObjectID(id) instanceof ObjectID).toBeTruthy();
+
+        expect(typeof repo.ensureObjectID(_id)).toBe('object');
+        expect(repo.ensureObjectID(id) instanceof ObjectID).toBeTruthy();
+    });
+
     it('.getSchema() should return the schema', function () {
         var repo = sut(db.collection('users'));
         var schema = repo.getSchema();
