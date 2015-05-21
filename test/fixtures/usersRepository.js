@@ -13,7 +13,7 @@ module.exports = function (collection) {
                     key: true
                 },
                 chief_id: {
-                    type: 'string',
+                    type: ['string', 'mongoId'],
                     required: false,
                     format: 'mongo-id'
                 },

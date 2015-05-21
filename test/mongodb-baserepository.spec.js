@@ -1366,22 +1366,6 @@ describe('MongoDB BaseRepository', function () {
             });
         });
 
-        it('should throw an exception when the number of params is less than 3', function () {
-            var repo = sut(db.collection('users'));
-
-            expect(function () {
-                return repo.updateMany(1, 2);
-            }).toThrow();
-
-            expect(function () {
-                return repo.updateMany(1);
-            }).toThrow();
-
-            expect(function () {
-                return repo.updateMany();
-            }).toThrow();
-        });
-
         it('should update the document of the collection', function (done) {
             var repo = userRepo(db.collection('users'));
             var user1 = {
@@ -1500,7 +1484,7 @@ describe('MongoDB BaseRepository', function () {
         });
     });
 
-    describe('has a function updateMany() which', function () {
+    describe('has a function updateOne() which', function () {
         it('should update the document of the collection', function (done) {
             var repo = sut(db.collection('users'));
 
@@ -1538,22 +1522,6 @@ describe('MongoDB BaseRepository', function () {
                     });
                 });
             });
-        });
-
-        it('should throw an exception when the number of params is less than 3', function () {
-            var repo = sut(db.collection('users'));
-
-            expect(function () {
-                return repo.updateOne(1, 2);
-            }).toThrow();
-
-            expect(function () {
-                return repo.updateOne(1);
-            }).toThrow();
-
-            expect(function () {
-                return repo.updateOne();
-            }).toThrow();
         });
 
         it('should update the document of the collection', function (done) {
