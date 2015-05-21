@@ -1,3 +1,12 @@
+<a name"1.0.3"></a>
+### 1.0.3 (2015-05-21)
+
+
+#### Bug Fixes
+
+* check if type of a schema property is an array when analyzing the schema ([084a6c77](https://github.com/litixsoft/mongodb-baserepository/commit/084a6c77))
+
+
 <a name"1.0.2"></a>
 ### 1.0.2 (2015-04-22)
 
