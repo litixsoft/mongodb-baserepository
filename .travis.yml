@@ -1,8 +1,13 @@
 language: node_js
+cache:
+  directories:
+    - node_modules
 node_js:
-- '0.10'
-- '0.11'
-- 'iojs'
+  - '0.10'
+  - '0.12'
+  - '3'
+  - '4'
+  - '5'
 before_script:
 - npm install -g grunt-cli
 - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
@@ -11,9 +16,6 @@ before_install:
   - "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list"
   - "sudo apt-get update"
   - "sudo apt-get install mongodb-org-server"
-matrix:
-  allow_failures:
-  - node_js: '0.11'
 notifications:
   slack:
     secure: lc8VLmVuHMlUCFQ+TADoXEPCf9byr+mu65aEeFyiP3DBfktHad/YmmU5sUiR1ut/PXqhkjFeZ0gFjNAo3q7R7RJW4cinTncgsG1ZSPY0PH6LyQ+Va2gIDRvyw854Yi58sbPzAxybtgSS9K3QntyRo0kGsGTO4eDAbqzwPLIxZ/Y=
