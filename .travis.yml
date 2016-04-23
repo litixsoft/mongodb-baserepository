@@ -9,6 +9,7 @@ node_js:
   - '4'
   - '5'
 before_script:
+- npm install -g npm@3
 - npm install -g grunt-cli
 - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
 before_install:
