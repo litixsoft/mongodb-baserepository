@@ -6,7 +6,7 @@ var sut = require(path.join(process.cwd(), 'lib', 'mongodb-baserepository'));
 var userRepo = require(path.join(process.cwd(), 'test', 'fixtures', 'usersRepository.js'));
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
-var MongoError = require(path.join(process.cwd(), 'node_modules', 'mongodb', 'node_modules', 'mongodb-core')).MongoError;
+var MongoError = require(path.join('mongodb-core')).MongoError;
 var db, user;
 var pipeline = [
     {
@@ -875,8 +875,8 @@ describe('MongoDB BaseRepository', function () {
             var repo = sut(db.collection('users'));
             var options = {
                 fields: {
-                    'userName': 1,
-                    'lastName': 1
+                    userName: 1,
+                    lastName: 1
                 }
             };
 
@@ -907,7 +907,7 @@ describe('MongoDB BaseRepository', function () {
         it('should get all documents of the collection with the specified sorting ascending', function (done) {
             var repo = sut(db.collection('users'));
             var options = {
-                sort: {'userName': 1}
+                sort: {userName: 1}
             };
 
             repo.insertOne(user, function () {
@@ -1332,7 +1332,7 @@ describe('MongoDB BaseRepository', function () {
 
             repo.insertOne(user, function () {
                 repo.insertOne({userName: 'wayne'}, function () {
-                    repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
+                    repo.updateMany({userName: 'chuck'}, {$set: {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
                         expect(res.result.n).toBe(1);
@@ -1378,7 +1378,7 @@ describe('MongoDB BaseRepository', function () {
             };
 
             repo.insertOne(user1, function () {
-                repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
+                repo.updateMany({userName: 'chuck'}, {$set: {userName: 'bob'}}, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
                     expect(res.result.n).toBe(1);
@@ -1408,7 +1408,7 @@ describe('MongoDB BaseRepository', function () {
             };
 
             repo.insertOne(user1, function () {
-                repo.updateMany({userName: 'chuck'}, {'$set': {userName: 'bob'}}, null, function (err, res) {
+                repo.updateMany({userName: 'chuck'}, {$set: {userName: 'bob'}}, null, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
                     expect(res.result.n).toBe(1);
@@ -1445,7 +1445,7 @@ describe('MongoDB BaseRepository', function () {
                     repo.count({userName: 'chuck'}, function (err, res) {
                         expect(res).toBe(1);
 
-                        repo.updateMany({firstName: 'Chuck'}, {'$set': {lastName: 'bob'}}, {multi: true}, function (err, res) {
+                        repo.updateMany({firstName: 'Chuck'}, {$set: {lastName: 'bob'}}, {multi: true}, function (err, res) {
                             expect(res).toBeDefined();
                             expect(res.result.ok).toBe(1);
                             expect(res.result.n).toBe(2);
@@ -1490,7 +1490,7 @@ describe('MongoDB BaseRepository', function () {
 
             repo.insertOne(user, function () {
                 repo.insertOne({userName: 'wayne'}, function () {
-                    repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
+                    repo.updateOne({userName: 'chuck'}, {$set: {userName: 'bob'}}, function (err, res) {
                         expect(res).toBeDefined();
                         expect(res.result.ok).toBe(1);
                         expect(res.result.n).toBe(1);
@@ -1536,7 +1536,7 @@ describe('MongoDB BaseRepository', function () {
             };
 
             repo.insertOne(user1, function () {
-                repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, function (err, res) {
+                repo.updateOne({userName: 'chuck'}, {$set: {userName: 'bob'}}, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
                     expect(res.result.n).toBe(1);
@@ -1566,7 +1566,7 @@ describe('MongoDB BaseRepository', function () {
             };
 
             repo.insertOne(user1, function () {
-                repo.updateOne({userName: 'chuck'}, {'$set': {userName: 'bob'}}, null, function (err, res) {
+                repo.updateOne({userName: 'chuck'}, {$set: {userName: 'bob'}}, null, function (err, res) {
                     expect(res).toBeDefined();
                     expect(res.result.ok).toBe(1);
                     expect(res.result.n).toBe(1);
@@ -1603,7 +1603,7 @@ describe('MongoDB BaseRepository', function () {
                     repo.count({firstName: 'Chuck'}, function (err, res) {
                         expect(res).toBe(2);
 
-                        repo.updateOne({firstName: 'Chuck'}, {'$set': {lastName: 'bob'}}, function (err, res) {
+                        repo.updateOne({firstName: 'Chuck'}, {$set: {lastName: 'bob'}}, function (err, res) {
                             expect(res).toBeDefined();
                             expect(res.result.ok).toBe(1);
                             expect(res.result.n).toBe(1);
