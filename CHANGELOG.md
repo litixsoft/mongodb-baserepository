@@ -1,3 +1,13 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/litixsoft/mongodb-baserepository/compare/v1.0.3...v1.0.4) (2016-04-23)
+
+
+### Features
+
+* replace method findOne() of mongodb native nodejs driver with find().limit(1) ([30013c0](https://github.com/litixsoft/mongodb-baserepository/commit/30013c0))
+
+
+
 <a name"1.0.3"></a>
 ### 1.0.3 (2015-05-21)
 
