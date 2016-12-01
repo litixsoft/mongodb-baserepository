@@ -1,3 +1,14 @@
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/litixsoft/mongodb-baserepository/compare/v1.0.3...v1.0.5) (2016-12-01)
+
+
+### Features
+
+* add methods findOneAndReplace(), findOneAndDelete(), findOneAndUpdate() ([ad8adb8](https://github.com/litixsoft/mongodb-baserepository/commit/ad8adb8))
+* replace method findOne() of mongodb native nodejs driver with find().limit(1) ([30013c0](https://github.com/litixsoft/mongodb-baserepository/commit/30013c0))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/litixsoft/mongodb-baserepository/compare/v1.0.3...v1.0.4) (2016-04-23)
 
