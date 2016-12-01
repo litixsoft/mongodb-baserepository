@@ -6,7 +6,7 @@ var sut = require(path.join(process.cwd(), 'lib', 'mongodb-baserepository'));
 var userRepo = require(path.join(process.cwd(), 'test', 'fixtures', 'usersRepository.js'));
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
-var MongoError = require(path.join('mongodb-core')).MongoError;
+// var MongoError = require(path.join('mongodb-core')).MongoError;
 var db, user;
 var pipeline = [
     {
