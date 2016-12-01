@@ -1,3 +1,14 @@
+<a name="1.0.6"></a>
+## [1.0.6](https://github.com/litixsoft/mongodb-baserepository/compare/v1.0.5...v1.0.6) (2016-12-01)
+
+
+### Bug Fixes
+
+* tests for insertOne() and insertMany() fixed ([5fc9674](https://github.com/litixsoft/mongodb-baserepository/commit/5fc9674))
+* tests for insertOne() and insertMany() fixed ([8499a32](https://github.com/litixsoft/mongodb-baserepository/commit/8499a32))
+
+
+
 <a name="1.0.5"></a>
 ## [1.0.5](https://github.com/litixsoft/mongodb-baserepository/compare/v1.0.3...v1.0.5) (2016-12-01)
 
