@@ -43,7 +43,6 @@
         "test": "grunt test --stack"
     },
     "dependencies": {
-        "async": "^1.5.2",
         "lx-helpers": "^0.5.1",
         "mongodb": "^2.1.16"
     },
