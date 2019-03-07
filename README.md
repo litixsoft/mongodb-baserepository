@@ -1,3 +1,6 @@
+    Project is deprecated. No continue development, no bugfixing anymore.
+---
+
 # mongodb-baserepository
 > Base repository for MongoDB
 
